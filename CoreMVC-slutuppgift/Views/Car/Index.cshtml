@@ -1,0 +1,34 @@
+﻿@model List<CoreMVC_slutuppgift.ViewModels.CarViewModel>
+
+<link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@@latest/css/pico.classless.min.css">
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car List</title>
+</head>
+<body>
+    <h1>Car List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+               
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                   
+                    <td>@car.Brand</td>
+                    <td>@car.Model</td>
+                    <td>@car.Year</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

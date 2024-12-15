@@ -11,9 +11,13 @@ namespace CoreMVC_slutuppgift
             // Register CarService for dependency injection
             builder.Services.AddSingleton<CarService>();
 
+            // Add MVC services
+            builder.Services.AddControllersWithViews();
+
             var app = builder.Build();
 
-            app.MapGet("/", () => "Hello World!");
+            // Stöd för Route-attribut på våra Action-metoder
+            app.MapControllers();
 
             app.Run();
         }

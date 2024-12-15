@@ -1,0 +1,33 @@
+﻿@model CoreMVC_slutuppgift.ViewModels.CarViewModel
+
+<link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@@latest/css/pico.classless.min.css">
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Car</title>
+</head>
+<body>
+    <h1>Add New Car</h1>
+
+    <form method="post" action="/cars/create">
+        <div>
+            <label for="Brand">Brand:</label>
+            <input type="text" id="Brand" name="Brand" required />
+        </div>
+        <div>
+            <label for="Model">Model:</label>
+            <input type="text" id="Model" name="Model" required />
+        </div>
+        <div>
+            <label for="Year">Year:</label>
+            <input type="number" id="Year" name="Year" required />
+        </div>
+        <div>
+            <button type="submit">Add Car</button>
+        </div>
+    </form>
+
+    <a href="/cars">Back to Car List</a>
+</body>
+</html>
