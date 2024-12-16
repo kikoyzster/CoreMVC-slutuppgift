@@ -18,6 +18,11 @@ namespace CoreMVC_slutuppgift
 
             // Stöd för Route-attribut på våra Action-metoder
             app.MapControllers();
+            app.MapGet("/", (context) =>
+            {
+                context.Response.Redirect("/cars");
+                return Task.CompletedTask;
+            });
 
             app.Run();
         }
