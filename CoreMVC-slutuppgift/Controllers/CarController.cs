@@ -14,7 +14,7 @@ namespace CoreMVC_slutuppgift.Controllers
             _carService = carService;
         }
 
-        [HttpGet]
+        [HttpGet("")]
         public IActionResult Index()
         {
             var carViewModles = _carService.GetAllCars().Select(car => new CarViewModel()
@@ -46,7 +46,7 @@ namespace CoreMVC_slutuppgift.Controllers
                 {
                     Brand = carViewModel.Brand,
                     Model = carViewModel.Model,
-                    Year = carViewModel.Year,
+                    Year = carViewModel.Year ?? 0,
                 };
 
                 _carService.AddCar(car);

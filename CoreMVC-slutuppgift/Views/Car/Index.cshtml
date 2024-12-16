@@ -1,34 +1,42 @@
 ﻿@model List<CoreMVC_slutuppgift.ViewModels.CarViewModel>
 
-<link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@@latest/css/pico.classless.min.css">
+@{
+    ViewData["Title"] = "Car List";
+}
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Car List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 </head>
 <body>
-    <h1>Car List</h1>
-    <table border="1">
-        <thead>
-            <tr>
-               
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Year</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var car in Model)
-            {
+    <div class="container mt-5">
+        <h1>Car List</h1>
+
+
+        <table class="table table-bordered">
+            <thead class="thead-light">
                 <tr>
-                   
-                    <td>@car.Brand</td>
-                    <td>@car.Model</td>
-                    <td>@car.Year</td>
+                    
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Year</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var car in Model)
+                {
+                    <tr>
+                       
+                        <td>@car.Brand</td>
+                        <td>@car.Model</td>
+                        <td>@car.Year</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
+
