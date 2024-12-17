@@ -1,28 +1,52 @@
-﻿namespace CoreMVC_slutuppgift.Models
+﻿using Microsoft.EntityFrameworkCore;
+using CoreMVC_slutuppgift.Models;
+
+namespace CoreMVC_slutuppgift.Models
 {
     public class CarService
     {
-        private readonly List<Car> cars;
+        private readonly AppDbContext _context;
 
-        public CarService()
+        public CarService(AppDbContext context)
         {
-            cars = new List<Car>()
-            {
-                new Car {Id = 1 , Brand = "Toyta" , Model = "Corolla" , Year = 2020 },
-                new Car {Id = 2 , Brand = "Honda" , Model = "Civic" , Year = 2019 },
-                new Car {Id = 3 , Brand = "Volvo" , Model = "XC60" , Year = 2015 }
-            };
+            _context = context;
         }
 
         public List<Car> GetAllCars()
         {
-            return cars;
+            return _context.Cars.ToList();
         }
 
         public void AddCar(Car car)
         {
-            car.Id = cars.Count + 1;
-            cars.Add(car);
+            _context.Cars.Add(car);
+            _context.SaveChanges();
+        }
+
+        public Car GetCarById(int id)
+        {
+            return _context.Cars.FirstOrDefault(c => c.Id == id);
+        }
+        public void UpdateCar(int id, Car updatedCar)
+        {
+            var car = _context.Cars.Find(id);
+            if (car != null)
+            {
+                car.Brand = updatedCar.Brand;
+                car.Model = updatedCar.Model;
+                car.Year = updatedCar.Year;
+                _context.SaveChanges();
+            }
+        }
+
+        public void DeleteCar(int id)
+        {
+            var car = GetCarById(id);
+            if (car != null)
+            {
+                _context.Cars.Remove(car);
+                _context.SaveChanges();
+            }
         }
     }
 }

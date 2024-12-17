@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreMVC_slutuppgift.ViewModels
 {
     public class CarViewModel
     {
+
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Brand is required.")]
         [StringLength(50, ErrorMessage = "Brand cannot exceed 50 characters.")]
         public string Brand { get; set; }     
@@ -14,6 +18,10 @@ namespace CoreMVC_slutuppgift.ViewModels
 
         [Required(ErrorMessage = "Year is required.")]
         [Range(1900, 2100, ErrorMessage = "Year must be between 1900 and 2100.")]
-        public int? Year { get; set; }         
+        public int? Year { get; set; }
+
+        
+        public List<string> AvailableBrands { get; set; } = new List<string>();
+
     }
 }
