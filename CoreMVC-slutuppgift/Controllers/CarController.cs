@@ -2,6 +2,7 @@
 using CoreMVC_slutuppgift.Services;
 using CoreMVC_slutuppgift.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreMVC_slutuppgift.Controllers
 {
@@ -11,6 +12,7 @@ namespace CoreMVC_slutuppgift.Controllers
         private readonly CarService _carService;
         private readonly BrandService _brandService;
 
+        // Konstruktor för att injicera CarService och BrandService
         public CarController(CarService carService ,BrandService brandService)
         {
             _carService = carService;
@@ -20,6 +22,7 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpGet("")]
         public IActionResult Index()
         {
+            // Hämtar alla bilar och mappar dem till ViewModel för att visa i vyn
             var carViewModles = _carService.GetAllCars().Select(car => new CarViewModel()
             {
                Id = car.Id,
@@ -37,6 +40,7 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpGet("create")]
         public IActionResult Create()
         {
+            // Förbereder en tom modell för att skapa en ny bil
             var viewModel = new CarViewModel
             {
                 AvailableBrands = _brandService.GetAvailableBrands()
@@ -49,6 +53,7 @@ namespace CoreMVC_slutuppgift.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Skapar en ny bil med data från ViewModel
                 var car = new Car()
                 {
                     
@@ -60,8 +65,10 @@ namespace CoreMVC_slutuppgift.Controllers
 
                 _carService.AddCar(car);
 
+                // Omdirigerar till Index-sidan efter att bilen har skapats
                 return RedirectToAction("Index");
             }
+            // Om modellen inte är giltig, ladda om sidan med tillgängliga märken
             carViewModel.AvailableBrands = _brandService.GetAvailableBrands();
             return View(carViewModel);
         }
@@ -69,11 +76,13 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpGet("edit/{id}")]
         public IActionResult Edit(int id)
         {
+            // Hämtar bilen baserat på ID
             var car = _carService.GetCarById(id);
             if (car == null)
             {
                 return NotFound();
             }
+            // Förbereder ViewModel för redigering
             var viewModel = new CarViewModel()
             {
                 Id = car.Id,
@@ -90,14 +99,17 @@ namespace CoreMVC_slutuppgift.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Uppdaterar bilens data baserat på ID
                 _carService.UpdateCar(id, new Car
                 {
                     Brand = carViewModel.Brand,
                     Model = carViewModel.Model,
                     Year = carViewModel.Year ?? 0
                 });
+                // Omdirigerar till Index-sidan efter uppdateringen
                 return RedirectToAction("Index");
             }
+            // Om modellen inte är giltig, ladda om sidan med tillgängliga märken
             carViewModel.AvailableBrands= _brandService.GetAvailableBrands();
             return View(carViewModel);
 
@@ -106,9 +118,11 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpGet("delete/{id}")]
         public IActionResult Delete(int id)
         {
+            // Hämtar bilen som ska raderas baserat på ID
             var car = _carService.GetCarById(id);
             if (car == null)
             {
+                // Returnerar 404 om bilen inte finns
                 return NotFound();
             }
             return View(car);
@@ -117,10 +131,19 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpPost("delete/{id}")]
         public IActionResult DeleteConfirmed(int id)
         {
+            // Tar bort bilen baserat på ID
             _carService.DeleteCar(id);
+            // Omdirigerar till Index-sidan efter att bilen har tagits bort
             return RedirectToAction("Index");
         }
 
+        [HttpGet("getcars")]
+        public IActionResult GetCars()
+        {
+            // Returnerar alla bilar som JSON
+            var cars = _carService.GetAllCars();
+            return Json(cars);
+        }
 
     }
 }

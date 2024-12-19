@@ -15,7 +15,9 @@
     <div class="container mt-5">
         <h1>Add New Car</h1>
 
+        <!-- Formulär för att lägga till en ny bil -->
         <form method="post" asp-action="Create">
+            <!-- Dropdown för att välja märke -->
             <div class="form-group">
                 <label asp-for="Brand">Brand</label>
                 <select asp-for="Brand" class="form-control">
@@ -27,23 +29,88 @@
                 </select>
                 <span asp-validation-for="Brand" class="text-danger"></span>
             </div>
+            <!-- Textfält för modell -->
             <div class="form-group">
                 <label asp-for="Model" class="form-label"></label>
                 <input asp-for="Model" class="form-control" />
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
+            <!-- Nummerfält för år -->
             <div class="form-group">
                 <label asp-for="Year" class="form-label"></label>
                 <input asp-for="Year" type="number" class="form-control" />
                 <span asp-validation-for="Year" class="text-danger"></span>
             </div>
+            <!-- Knapp för att skicka formuläret -->
             <button type="submit" class="btn btn-primary">Add Car</button>
         </form>
 
-        
+
     </div>
 
-    
+    <!-- Sektion för att visa lista över bilar med AJAX -->
+    <div class="container mt-5">
+        <h2>Car List (AJAX)</h2>
+        <button id="loadCars" class="btn btn-primary mb-3">Load Cars</button>
+
+        <!-- Visar en indikator under laddning -->
+        <div id="loadingIndicator" class="text-info mb-3" style="display: none;">Loading...</div>
+        <ul id="carList" class="list-group">
+        </ul>
+    </div>
+
+
 </body>
 </html>
 
+<script>
+    // Lägg till en lyssnare på knappen för att ladda bilar
+    document.getElementById("loadCars").addEventListener("click", function () {
+            const carList = document.getElementById("carList");
+            const loadingIndicator = document.getElementById("loadingIndicator");
+
+            // Visa laddningsindikatorn
+            loadingIndicator.style.display = "block";
+
+            // Skicka AJAX-förfrågan för att hämta bilinformation
+            fetch("/cars/getcars")
+                .then(response => response.json())
+                .then(data => {
+
+                    // Dölj laddningsindikatorn
+                    loadingIndicator.style.display = "none";
+
+                    // Töm den gamla listan
+                     carList.innerHTML = "";
+                    let index = 0;
+
+                    // Funktion för att visa bilar en i taget
+                    function addCar() {
+                        if (index < data.length) {
+                            const car = data[index];
+                            const li = document.createElement("li");
+                            li.textContent = `${car.brand} - ${car.model} (${car.year})`;
+                            li.className = "list-group-item";
+                            carList.appendChild(li);
+                            index++;
+
+                            // Ladda nästa bil efter 100 ms
+                            setTimeout(addCar, 100);
+                        } else {
+                             // Visa ett meddelande när alla bilar har laddats
+                            const completedMessage = document.createElement("li");
+                            completedMessage.textContent = "All cars have been loaded!";
+                            completedMessage.className = "list-group-item text-success";
+                            carList.appendChild(completedMessage);
+                        }
+                    }
+
+                addCar();
+                })
+
+        });
+
+
+
+
+</script>

@@ -11,6 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
+                <!-- Länk till startsidan för bilhantering -->
                 <a class="navbar-brand" href="/cars">Car Management</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
@@ -19,14 +20,17 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         
+                        <!-- Länk till bilista -->
                         <li class="nav-item">
                             <a class="nav-link" href="/cars">Car List</a>
                         </li>
+                        <!-- Länk för att lägga till en ny bil -->
                         <li class="nav-item">
                             <a class="nav-link" href="/cars/create">Add New Car</a>
                         </li>
                         @if (ViewContext.HttpContext.Session.GetString("UserFirstName") != null)
                         {
+                            <!-- Om användaren är inloggad, visa "Logout" och "Users" -->
                             <li class="nav-item">
                                 <form method="post" action="/account/logout" class="d-inline">
                                     <button type="submit" class="btn btn-link nav-link">Logout</button>
@@ -38,6 +42,7 @@
                         }
                         else
                         {
+                            <!-- Om användaren inte är inloggad, visa "Login" -->
                             <li class="nav-item">
                                 <a class="nav-link" href="/account/login">Login</a>
                             </li>
@@ -53,6 +58,8 @@
     <main role="main" class="container mt-4">
 
         @RenderBody()
+
+        <!-- Meddelande för framgång -->
         @if (TempData["SuccessMessage"] != null)
         {
             <div class="alert alert-success">

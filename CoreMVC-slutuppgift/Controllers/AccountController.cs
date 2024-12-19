@@ -14,6 +14,7 @@ namespace CoreMVC_slutuppgift.Controllers
 
         private readonly AccountService _accountService;
 
+        // Konstruktor för att injicera AccountService
         public AccountController(AccountService accountService)
         {
             _accountService = accountService;
@@ -24,19 +25,21 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpGet("register")]
         public IActionResult Register()
         {
+            // Returnerar vyn för registrering med ett tomt modell
             return View(new RegisterViewModel());
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            // Kontrollera om modellen är giltig
             if (!ModelState.IsValid)
             {
                 return View(model); 
             }
 
-         
 
+            // Försöker registrera användaren via AccountService
             var result = await _accountService.RegisterUserAsync(model);
 
             if (result.Succeeded)
@@ -64,20 +67,21 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(string email, string password)
         {
-
+            // Kontrollerar att e-post och lösenord är ifyllda
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 TempData["ErrorMessage"] = "Email and Password are required.";
                 return View();
             }
 
+            // Försöker logga in användaren via AccountService
             var result = await _accountService.LoginUserAsync(email, password);
 
             if (result)
             {
                 var user = await _accountService.GetUserByEmailAsync(email);
 
-
+                // Sparar användarens förnamn i sessionen
                 HttpContext.Session.SetString("UserFirstName", user.FirstName);
                 
 
@@ -92,6 +96,7 @@ namespace CoreMVC_slutuppgift.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
+            // Loggar ut användaren och rensar sessionen
             await _accountService.LogoutAsync();
             HttpContext.Session.Clear();
             TempData["SuccessMessage"] = "You have been logged out successfully.";
@@ -102,6 +107,7 @@ namespace CoreMVC_slutuppgift.Controllers
         [Authorize]
         public IActionResult Users()
         {
+            // Hämtar alla användare och returnerar vyn för användarlistan
             var users = _accountService.GetAllUsers();
             return View(users);
         }
