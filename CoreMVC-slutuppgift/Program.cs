@@ -1,5 +1,6 @@
 ﻿using CoreMVC_slutuppgift.Models;
 using CoreMVC_slutuppgift.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreMVC_slutuppgift
@@ -19,10 +20,34 @@ namespace CoreMVC_slutuppgift
             // Configure EF Core with SQL Server
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = true;
+            })
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
+
+            builder.Services.AddScoped<AccountService>();
+
             // Register CarService for dependency injection
             builder.Services.AddScoped<CarService>();
 
             builder.Services.AddSingleton<BrandService>();
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); 
+                options.Cookie.HttpOnly = true; 
+                options.Cookie.IsEssential = true;
+            });
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/account/login"; 
+                
+            });
             var app = builder.Build();
 
             // Ensure database is created and seed data is added
@@ -34,9 +59,9 @@ namespace CoreMVC_slutuppgift
                 dbContext.Database.EnsureCreated();
 
                 
-               //  dbContext.Database.Migrate();
+                // dbContext.Database.Migrate();
             }
-
+            app.UseSession();
             // Stöd för Route-attribut på våra Action-metoder
             app.MapControllers();
             app.MapGet("/", (context) =>
@@ -44,6 +69,9 @@ namespace CoreMVC_slutuppgift
                 context.Response.Redirect("/cars");
                 return Task.CompletedTask;
             });
+
+            
+            app.UseAuthorization();
 
             app.Run();
         }

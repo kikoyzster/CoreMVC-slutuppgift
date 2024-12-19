@@ -1,0 +1,8 @@
+﻿@if (ViewContext.HttpContext.Session.GetString("UserFirstName") != null)
+{
+    <p class="text-primary">Welcome, @ViewContext.HttpContext.Session.GetString("UserFirstName")!</p>
+}
+else
+{
+    <p>Welcome, Guest!</p>
+}

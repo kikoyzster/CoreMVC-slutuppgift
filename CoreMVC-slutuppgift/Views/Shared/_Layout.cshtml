@@ -15,14 +15,34 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="/cars">Car List</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/cars/create">Add New Car</a>
                         </li>
+                        @if (ViewContext.HttpContext.Session.GetString("UserFirstName") != null)
+                        {
+                            <li class="nav-item">
+                                <form method="post" action="/account/logout" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/account/users">Users</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/account/login">Login</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -31,7 +51,20 @@
 
     <!-- Main Content -->
     <main role="main" class="container mt-4">
+
         @RenderBody()
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @Html.Raw(@TempData["SuccessMessage"])
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @Html.Raw(TempData["ErrorMessage"])
+            </div>
+        }
     </main>
 
     <!-- Footer -->
@@ -39,6 +72,8 @@
         <div class="container">
             <span class="text-muted">&copy; @DateTime.Now.Year - MyEntityApp</span>
         </div>
+        @await Html.PartialAsync("_UserGreeting")
+
     </footer>
 
     <!-- Scripts -->
@@ -46,3 +81,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
